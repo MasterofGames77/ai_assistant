@@ -14,14 +14,14 @@ load_dotenv()
 # Retrieve environment variables
 openai_api_key = os.getenv("OPENAI_API_KEY")
 rawg_api_key = os.getenv("RAWG_API_KEY")
-twitch_client_id = os.getenv("TWITCH_CLIENT_ID")
+next_public_twitch_client_id = os.getenv("NEXT_PUBLIC_TWITCH_CLIENT_ID")
 twitch_client_secret = os.getenv("TWITCH_CLIENT_SECRET")
 twitch_token_url = os.getenv("TWITCH_TOKEN_URL")
 mongo_uri = os.getenv("MONGODB_URI")
 
 client = OpenAI(api_key=openai_api_key)
 
-if not all([openai_api_key, rawg_api_key, twitch_client_id, twitch_client_secret, twitch_token_url, mongo_uri]):
+if not all([openai_api_key, rawg_api_key, next_public_twitch_client_id, twitch_client_secret, twitch_token_url, mongo_uri]):
     raise ValueError("One or more environment variables are missing or not set correctly")
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
@@ -39,7 +39,7 @@ token_info = {"access_token": None, "expires_at": None}
 def get_access_token():
     """ Fetch access token using Twitch credentials. """
     data = {
-        'client_id': twitch_client_id,
+        'client_id': next_public_twitch_client_id,
         'client_secret': twitch_client_secret,
         'grant_type': 'client_credentials'
     }
@@ -92,7 +92,7 @@ def fetch_igdb_data(access_token, client_id):
 
 # Fetch IGDB data
 try:
-    games_data = fetch_igdb_data(access_token, twitch_client_id)
+    games_data = fetch_igdb_data(access_token, next_public_twitch_client_id)
     for game in games_data:
         print(game)
 except Exception as e:
